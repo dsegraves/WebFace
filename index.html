@@ -19,6 +19,7 @@
         var cube, plane, colors = [];
         var group = new THREE.Object3D();
         var info;
+        //var scene;
         var data1;
         var data2;
         var verts = new Array();
@@ -57,7 +58,7 @@
         					verts[i] = v3(data1.getValue(i,1), data1.getValue(i,2), data1.getValue(i,3));
         					vert_att[i] = data1.getValue(i,6);
         				}else if (data1.getValue(i,0) == "Line") {
-        					lines[l] = l2(data1.getValue(i,1), data1.getValue(i,2)); 
+        					lines[l] = l2(verts[data1.getValue(i,1)], verts[data1.getValue(i,2)]); 
         					l++;
         				} else if (data1.getValue(i,0) == "Mesh") {
         					meshes[m] = s4(data1.getValue(i,2),data1.getValue(i,3),data1.getValue(i,4),data1.getValue(i,5));
@@ -113,8 +114,8 @@
                 
                 for (i = 0; i < verts.length; i++) {
                 	var a_c = (vert_att[i] /5 ) * 255
-                	material = new THREE.MeshBasicMaterial({color:"#" + componentToHex(a_c) + componentToHex(255-a_c) + componentToHex(0)});
-                	 sphere = new THREE.SphereGeometry(vert_att[i]);
+                	material = new THREE.MeshBasicMaterial({color:"#" + ctx(a_c) + ctx(255-a_c) + ctx(0)});
+                	 sphere = new THREE.SphereGeometry(vert_att[i],  20, 20);
                 	mesh = new THREE.Mesh(sphere, material);
                 	mesh.position.set(verts[i].x, verts[i].y, verts[i].z);
                 	//mesh.castShadow = true;
@@ -124,12 +125,36 @@
                 
                 
                 for (i = 0; i < lines.length; i++) {
-                	line = new THREE.Line(lines[i]);
-                	material = new THREE.LineBasicMaterial(
-                	scene.add(line);
+                	//material = new THREE.LineBasicMaterial({color:"#" + ctx(255) + ctx(0) + ctx(0)}, 4, 'round', 'round', true); 
+                	//line = new THREE.Line(lines[i], material, THREE.LinePieces);  					
+                	//scene.add(line);
+                	LineSplitter(lines[i], 0, 5, 0, 5, 10);
                 }
                  
                 
+        }
+        
+        function LineSplitter (line, start_val, end_val, start_rng, end_rng, seg_num) {
+        	verts = line.vertices;
+        	v1 = verts[0];
+        	v2 = verts[1];
+        	for (i = 0; i < seg_num; i++) {
+        		va = new THREE.Vector3();
+        		va.subVectors(v2, v1);
+        		va.multiplyScalar(i/seg_num);
+        		va.addVectors(va,v1);
+        		vb = new THREE.Vector3();
+        		vb.subVectors(v2,v1);
+        		vb.multiplyScalar((i+1)/seg_num);
+        		vb.addVectors(vb,v1);
+        		l_geo = l2(va, vb);
+        		val = (end_val - start_val)*(i/seg_num) + start_val;
+        		val = (val - start_rng)/(end_rng - start_rng);
+        		col_val = Math.round(val * 255);
+        		material = new THREE.LineBasicMaterial({color:"#" + ctx(col_val) + ctx(255-col_val) + ctx(0)}, 4, 'round', 'round', true); 
+        		l_new = new THREE.Line(l_geo, material, THREE.LinePieces);
+        		scene.add(l_new);
+        	}
         }
         
         
@@ -137,8 +162,8 @@
         function v3(x, y, z){ return new THREE.Vector3( x, y, z ); }
         function l2(v1,v2) {
         				var line_verts = new THREE.Geometry();
-                line_verts.vertices.push(verts[v1]);
-                line_verts.vertices.push(verts[v2]);
+                line_verts.vertices.push(v1);
+                line_verts.vertices.push(v2);
                 return line_verts;
               }
         function s4(a,b,c,d)
@@ -150,7 +175,7 @@
         
         
         
-        function componentToHex(c) {
+        function ctx(c) {
     			var hex = c.toString(16);
     			return hex.length == 1 ? "0" + hex : hex;
 				}
