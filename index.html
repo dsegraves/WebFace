@@ -204,20 +204,28 @@
 	    	</h1>
 	    </div>
 	    <div class = "clear"></div>
-        <div class = "grid_3" id ="dragMe" style ="background-color:rgba(225,225,225,0.3)">
+        <div class = "grid_4" id ="dragMe" style ="background-color:rgba(225,225,225,0.3)">
 	    		<h3>
 	    			Structural Data
 	    		</h3>
-	    		<div class="accord">
+	    		<div class="accord" >
 		            <h3 >Framing Member Length</h3>
 		            <div >
-		                <p id="TT_ID">stick a slider in here</p>
+                        <p>
+                            <label for="length">Length range:</label>
+                            <input type ="text" id="length" style ="border: 0; font-weight: bold;" />
+                        </p>
+		                <div id="lengthSlider"></div>
 		            </div>
         		</div>
                 <div class="accord">
 		            <h3 >Node Displacement</h3>
 		            <div >
-		                <p id="TT_Profile">stick a slider in here</p>
+                        <p>
+                            <label for="disp">Displacement range:</label>
+                            <input type ="text" id="disp" style ="border: 0; font-weight: bold;" />
+                        </p>
+		                <div id="dispSlider"></div>
 		            </div>
         		</div>
 	    	</div>
