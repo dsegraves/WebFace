@@ -16,6 +16,45 @@
     <script src = http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript"> google.load('visualization', '1', { packages: ['linechart'] }); </script>
+
+    <?php
+
+        require_once("db_connect.php");
+        //get select fields from employee table AND from department table (informal join)
+        //$sql = "SELECT empId, lastName, firstName, departmentName, position, salary FROM employee, departments WHERE department = deptID";
+        $sql = "SELECT *  FROM Curves";
+        $curvesResult = mysql_query($sql) or die(mysql_error);
+
+        $sql = "SELECT *  FROM Vertices";
+        $verticesResult = mysql_query($sql) or die(mysql_error);
+
+        mysql_close();
+
+        $curvesRows = array();
+        //use while to loop through all rows:
+        while($row = mysql_fetch_array($curvesResult))
+        {    
+            $curvesRows[] = $row;
+        }
+
+        $verticesRows = array();
+        //use while to loop through all rows:
+        while($vrow = mysql_fetch_array($verticesResult))
+        {    
+            $verticesRows[] = $vrow;
+        }
+      
+?>
+
+
+<script type='text/javascript'>
+    var myCurvesArray = <?php echo json_encode($curvesRows); ?>;
+    var myVerticesArray = <?php echo json_encode($verticesRows); ?>;
+</script>
+
+<!--
+-->
+
 </head>
 <body>
 
@@ -200,7 +239,7 @@
 
         function animate() {
                 requestAnimationFrame( animate );
-                controls.update();
+                //controls.update();
                 renderer.render( scene, camera );
         }
 

@@ -15,9 +15,30 @@ $(document).ready(function () {
 
 
     //0 - TO DO - populate min and max values of sliders using geometry data
-	
-	
-	//1 - enable accordians
+    for (var i = 0; i < myCurvesArray.length; i++) {
+
+        //get current curve length
+        var len = myCurvesArray[i]["Length"];
+        console.log(len);
+
+        //if it's greater than our max, it's the new max
+
+        //if it's less than our min, it's the new min
+    };
+
+    //0 - TO DO - populate min and max values of sliders using geometry data
+    for (var i = 0; i < myVerticesArray.length; i++) {
+
+        //get current curve length
+        var deflection = myVerticesArray[i]["Deflection"];
+        console.log('def: ' + deflection);
+
+        //if it's greater than our max, it's the new max
+
+        //if it's less than our min, it's the new min
+    };
+
+    //1 - enable accordians
     $('.accord').accordion({ collapsible: true, active: false, heightStyle: "content" });
     $('#dragMe').draggable();
 
