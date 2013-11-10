@@ -69,50 +69,30 @@
         var data1;
         var verts = new Array();
         var vert_att = new Array();
+        var vert_att_disp = new Array();
         var lines = new Array();
         var line_att = new Array();
         var meshes = new Array();
 
 
-        //CallGoogle();
         init();
 				animate();
         
- 
-        
-      	function CallGoogle() {
-        	//Spreadsheet call
-        	google.load("visualization", '1', {packages:['corechart']});
-        	var query1 = new google.visualization.Query(
-      			'https://docs.google.com/spreadsheet/ccc?key=0Au4jT9H1H9iBdHVCMFd3Tzg2TEN0RXlhRmtGWXVEc3c#gid=1');
-  				query1.setQuery('select *');
-  				query1.send(handleQueryResponse);
-  			}
-        	  	
-        function handleQueryResponse(response) {
-						if (response.isError()) {alert("response");}
-
-						data1 = response.getDataTable();
-						
-						
-				}
-				
       	
         	function init() {
   
   
-  
-
-						
-        			for(var i = 0; i < myVerticesArray.length; i++){
+        			//for(var i = 0; i < myVerticesArray.length; i++){
+        			for(var i = 0; i < 40; i++){
         					verts[i] = v3(myVerticesArray[i]["X"], myVerticesArray[i]["Y"], myVerticesArray[i]["Z"]);
         					vert_att[i] = myVerticesArray[i]["Connections"];
+        					vert_att_disp[i] = myVerticesArray[i]["Deflection"];
         				}
         				
-        				for(var i = 0; i < myCurvesArray.length; i++){
+        				//for(var i = 0; i < myCurvesArray.length; i++){
+        				for(var i = 0; i < 10; i++){
         					v1_i = myCurvesArray[i]["startVertID"];
         					v1_i = parseInt(v1_i.substring(1));
-        					alert(v1_i);
         					v2_i = myCurvesArray[i]["endVertID"];
         					v2_i = parseInt(v2_i.substring(1));
         					lines[i] = l2(verts[v1_i], verts[v2_i]); 
@@ -154,8 +134,8 @@
 
 // Objects
 
- 								v_rng_start = 4;
- 								v_rng_end = 5;               
+ 								v_rng_start = dispSliderMin;
+ 								v_rng_end = dispSliderMax;               
                 for (i = 0; i < verts.length; i++) {
                 	val = vert_att[i];
                 	var a_c = (val - v_rng_start)/(v_rng_end - v_rng_start) * 255;
@@ -164,18 +144,26 @@
                 	{
                 		material = new THREE.MeshBasicMaterial({color:"#" + ctx(a_c) + ctx(255-a_c) + ctx(0)});
                 	}
-                	sphere = new THREE.SphereGeometry(vert_att[i],  20, 20);
+                	sphere = new THREE.SphereGeometry(vert_att_disp[i] / 100000000000,  20, 20);
                 	mesh = new THREE.Mesh(sphere, material);
                 	mesh.position.set(verts[i].x, verts[i].y, verts[i].z);
                 	scene.add(mesh);
                 }
                 
                 
+                l_rng_start = lengthSliderMin;
+                l_rng_end = lengthSliderMax;
                 for (i = 0; i < lines.length; i++) {
-                	//material = new THREE.LineBasicMaterial({color:"#" + ctx(255) + ctx(0) + ctx(0)}, 4, 'round', 'round', true); 
-                	//line = new THREE.Line(lines[i], material, THREE.LinePieces);  					
-                	//scene.add(line);
-                	LineSplitter(lines[i], 0, 5, 0, 5, 10);
+                	val = line_att[i];
+                	var a_c = (val - l_rng_start)/(l_rng_end - l_rng_start) * 255;
+ 										material = new THREE.MeshBasicMaterial({color:"#" + ctx(220) + ctx(220) + ctx(220), opacity: 0.5, transparent: true});
+                	if(a_c <= 255 && a_c >= 0)
+                	{
+                		material = new THREE.MeshBasicMaterial({color:"#" + ctx(0) + ctx(255-a_c) + ctx(a_c)});
+                	}               	
+                	line = new THREE.Line(lines[i], material, THREE.LinePieces);  					
+                	scene.add(line);
+                	//LineSplitter(lines[i], 0, 5, 0, 5, 4);
                 }
                  
                 
