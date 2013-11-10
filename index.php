@@ -74,7 +74,9 @@
         var meshes = new Array();
 
 
-        CallGoogle();
+        //CallGoogle();
+        init();
+				animate();
         
  
         
@@ -92,28 +94,31 @@
 
 						data1 = response.getDataTable();
 						
-						init();
-						animate();
+						
 				}
 				
       	
         	function init() {
   
-						var l = 0;
-						var m = 0;
+  
+  
+
 						
-        			for(var i = 0; i<data1.getNumberOfRows(); i++){
-        				if (data1.getValue(i,0) == "Vertex") {
-        					verts[i] = v3(data1.getValue(i,1), data1.getValue(i,2), data1.getValue(i,3));
-        					vert_att[i] = data1.getValue(i,6);
-        				}else if (data1.getValue(i,0) == "Line") {
-        					lines[l] = l2(verts[data1.getValue(i,1)], verts[data1.getValue(i,2)]); 
-        					l++;
-        				} else if (data1.getValue(i,0) == "Mesh") {
-        					meshes[m] = s4(data1.getValue(i,2),data1.getValue(i,3),data1.getValue(i,4),data1.getValue(i,5));
-        					m++;
+        			for(var i = 0; i < myVerticesArray.length; i++){
+        					verts[i] = v3(myVerticesArray[i]["X"], myVerticesArray[i]["Y"], myVerticesArray[i]["Z"]);
+        					vert_att[i] = myVerticesArray[i]["Connections"];
         				}
-        			}
+        				
+        				for(var i = 0; i < myCurvesArray.length; i++){
+        					v1_i = myCurvesArray[i]["startVertID"];
+        					v1_i = parseInt(v1_i.substring(1));
+        					alert(v1_i);
+        					v2_i = myCurvesArray[i]["endVertID"];
+        					v2_i = parseInt(v2_i.substring(1));
+        					lines[i] = l2(verts[v1_i], verts[v2_i]); 
+        					line_att[i] = myCurvesArray[i]["Length"];
+        				} 
+        			
         			
                 var css, light, geometry, material, mesh;
 
