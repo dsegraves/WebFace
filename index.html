@@ -125,15 +125,19 @@
 
 // Objects
 
-                
+ 								v_rng_start = 0;
+ 								v_rng_end = 5;               
                 for (i = 0; i < verts.length; i++) {
-                	var a_c = (vert_att[i] /5 ) * 255
-                	material = new THREE.MeshBasicMaterial({color:"#" + ctx(a_c) + ctx(255-a_c) + ctx(0)});
-                	 sphere = new THREE.SphereGeometry(vert_att[i],  20, 20);
+                	val = vert_att[i];
+                	var a_c = (val - v_rng_start)/(v_rng_end - v_rng_start) * 255;
+                	material = new THREE.MeshBasicMaterial({color:"#" + ctx(220) + ctx(220) + ctx(220)});
+                	if(a_c <= 255 && a_c >= 0)
+                	{
+                		material = new THREE.MeshBasicMaterial({color:"#" + ctx(a_c) + ctx(255-a_c) + ctx(0)});
+                	}
+                	sphere = new THREE.SphereGeometry(vert_att[i],  20, 20);
                 	mesh = new THREE.Mesh(sphere, material);
                 	mesh.position.set(verts[i].x, verts[i].y, verts[i].z);
-                	//mesh.castShadow = true;
-                	//mesh.receiveShadow = true;
                 	scene.add(mesh);
                 }
                 
